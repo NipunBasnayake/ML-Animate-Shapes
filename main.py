@@ -1,26 +1,41 @@
 from turtle import *
 from colorsys import *
 
-bgcolor('black')
-speed(0)
-pensize(2)
-hideturtle()
-penup()
-setposition(50, -50)
-pendown()
+screen = Screen()
+screen.bgcolor('black')
+screen.tracer(0)
+screen.title("Turtle as Cursor")
 
-h = 0.0 
-num_shapes = 120
-sides = 4
+screen.getcanvas().config(cursor="none")
 
-for i in range(num_shapes):
-    for j in range(sides):
-        r, g, b = hsv_to_rgb(h % 1.0, 1, 1)
-        color(r, g, b)
-        h += 0.005
-        circle(40 + j * 5, 90)
-        forward(250)
-        left(90)
-    right(10)
+flower = Turtle()
+flower.hideturtle()
+flower.speed(0)
+flower.pensize(1)
 
+hue = 0.0
+
+def draw_flower(x, y):
+    global hue
+    flower.clear()
+    flower.penup()
+    flower.goto(x, y)
+    flower.pendown()
+
+    for i in range(12):
+        r, g, b = hsv_to_rgb(hue % 1.0, 1, 1)
+        flower.color(r, g, b)
+        flower.circle(15, 60)
+        flower.left(100)
+        hue += 0.01
+
+    screen.update()
+
+def on_mouse_move(x, y):
+    draw_flower(x - screen.window_width() // 2, screen.window_height() // 2 - y)
+
+canvas = screen.getcanvas()
+canvas.bind('<Motion>', lambda e: on_mouse_move(e.x, e.y))
+
+screen.listen()
 done()
